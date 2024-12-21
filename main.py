@@ -1,56 +1,76 @@
 import sys
 from abc import abstractmethod
+from abc import ABC
 
-
-class Weapon:
+class Weapon(ABC):
     @abstractmethod
     def attack(self):
         pass
 
+
 class Sword(Weapon):
     def attack(self):
-        return "Боец наносит удар мечом"
+        return "Наносит удар мечом"
+
+    def str(self):
+        return "Меч"
+
 
 class Bow(Weapon):
     def attack(self):
-        return "Боец делает выстрел из лука"
+        return "Делает выстрел из лука"
+
+    def str(self):
+        return "Лук"
 
 class AK74(Weapon):
     def attack(self):
-        return "Боец даёт очередь из автомата"
+        return "Даёт очередь из автомата"
+
+    def str(self):
+        return "AK74"
+
 
 class Fighter:
+    weapon =None
     def __init__(self, name):
         self.name = name
-        self.weapon = None
 
     def change_weapon(self, weapon: Weapon):
         if not isinstance(weapon, Weapon):
             raise TypeError("Оружие должно быть экземпляром класса производного от Weapon.")
-        self.weapon = weapon
+        else:
+            self.weapon = weapon
+            print(f"{self.name} выбрал {self.weapon.str()}")
 
     def attack(self):
-        self.weapon.attack()
+        return self.name +": " +self.weapon.attack()
 
-class Monster:
-    def __init__(self, lifes=5):
-        self.lifes = lifes
+class Monster():
+    n = 0 #число жизней
+    def __init__(self, n = 5):
+        self.n = n
 
     def hit(self):
-        self.lifes -= 1
+        self.n -= 1
         s = 'ь'
-        if self.lifes >1: s = 'и'
-        if self.lifes >0 :
-            print(f"В меня попали, но у меня ещё есть {self.lifes} жизн{s}")
+        if self.n >1: s = 'и'
+        if self.n >0 :
+            print(f"Монстр: 'В меня попали, но у меня ещё есть {self.n} жизн{s}'")
         else:
-            print("О, - я убит!")
+            print("Монстр: 'О-o-o, - я убит!'")
             print("Game over.")
             sys.exit()
 
-    w = Sword()
-    f = Fighter("Hero")
-    f.change_weapon(w)
-    m = Monster()
-    f.attack()
-    m.hit()
-
+w = Sword()
+f = Fighter("Hero")
+f.change_weapon(w)
+m = Monster(3)
+print(f.attack())
+m.hit()
+w = AK74()
+f.change_weapon(w)
+print(f.attack())
+m.hit()
+print(f.attack())
+m.hit()
